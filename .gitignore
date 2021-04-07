@@ -1,3 +1,7 @@
 bin
 obj
 .ionide
+devcontainer.env
+appsettings.*.json
+
+.fake
