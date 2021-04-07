@@ -5,3 +5,5 @@ devcontainer.env
 appsettings.*.json
 
 .fake
+
+packages

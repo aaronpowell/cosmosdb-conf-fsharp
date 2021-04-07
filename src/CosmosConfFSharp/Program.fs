@@ -43,6 +43,10 @@ let getConnection connStr =
     |> Cosmos.database "trivia"
     |> Cosmos.container "game"
 
+let getQuestions connection =
+    connection
+    |> Cosmos.query "SELECT TOP 10 * FROM c WHERE c.modelType = 'Question'"
+
 [<EntryPoint>]
 let main argv =
     let environmentName =
@@ -69,8 +73,7 @@ let main argv =
             |> getConnection
 
         let! game =
-            connection
-            |> Cosmos.query "SELECT TOP 10 * FROM c WHERE c.modelType = 'Question'"
+            getQuestions connection
             |> Cosmos.execAsync<Question>
             |> AsyncSeq.fold
                 (fun state question ->

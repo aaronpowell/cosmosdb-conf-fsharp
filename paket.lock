@@ -119,3 +119,8 @@ NUGET
       Azure.Cosmos (>= 4.0.0-preview3) - restriction: || (== net50) (&& (== netstandard2.0) (>= net50)) (&& (== netstandard2.1) (>= net50))
       FSharp.Control.AsyncSeq (>= 3.0.3) - restriction: || (== net50) (&& (== netstandard2.0) (>= net50)) (&& (== netstandard2.1) (>= net50))
       FSharp.Core (>= 5.0.1) - restriction: || (== net50) (&& (== netstandard2.0) (>= net50)) (&& (== netstandard2.1) (>= net50))
+
+GROUP Analyzers
+NUGET
+  remote: https://nuget.pkg.github.com/aaronpowell/index.json
+    FSharp.CosmosDb.Analyzer (0.5.0-ci-726032018)
