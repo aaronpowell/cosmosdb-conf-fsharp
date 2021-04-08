@@ -47,6 +47,47 @@ let getQuestions connection =
     connection
     |> Cosmos.query "SELECT TOP 10 * FROM c WHERE c.modelType = 'Question'"
 
+let initialGame =
+    { id = Guid.NewGuid().ToString()
+      modelType = "Game"
+      state = "Started"
+      players =
+          [| { id = "CosmosDB Conf"
+               modelType = "User"
+               name = "CosmosDB Conf" } |]
+      answers = Array.empty
+      questions = Array.empty }
+
+let completeQuestion state question answer =
+    { state with
+          questions = Array.append [| question |] state.questions
+          answers =
+              Array.append
+                  [| { answer = answer
+                       user = state.players.[0]
+                       question = question } |]
+                  state.answers }
+
+let playQuestion state (question: Question) =
+    printfn "Question %d" ((state.questions |> Array.length) + 1)
+    printfn "	%s" question.question
+    printfn "--------"
+
+    let sorted =
+        question.incorrectAnswers
+        |> Array.append [| question.correctAnswer |]
+        |> Array.sort
+
+    sorted |> Array.iteri (printfn "	%d - %s")
+    printfn "--------"
+
+    printf "Select an answer: "
+
+    Console.ReadLine()
+    |> int
+    |> Array.get sorted
+    |> completeQuestion state question
+
 [<EntryPoint>]
 let main argv =
     let environmentName =
@@ -75,40 +116,7 @@ let main argv =
         let! game =
             getQuestions connection
             |> Cosmos.execAsync<Question>
-            |> AsyncSeq.fold
-                (fun state question ->
-                    printfn "Question %d" ((state.questions |> Array.length) + 1)
-                    printfn "	%s" question.question
-                    printfn "--------"
-
-                    let sorted =
-                        question.incorrectAnswers
-                        |> Array.append [| question.correctAnswer |]
-                        |> Array.sort
-
-                    sorted |> Array.iteri (printfn "	%d - %s")
-                    printfn "--------"
-
-                    printf "Select an answer: "
-                    let selected = Console.ReadLine() |> Int32.Parse
-
-                    { state with
-                          questions = Array.append [| question |] state.questions
-                          answers =
-                              Array.append
-                                  [| { answer = sorted.[selected]
-                                       user = state.players.[0]
-                                       question = question } |]
-                                  state.answers })
-                { id = Guid.NewGuid().ToString()
-                  modelType = "Game"
-                  state = "Started"
-                  players =
-                      [| { id = "CosmosDB Conf"
-                           modelType = "User"
-                           name = "CosmosDB Conf" } |]
-                  answers = Array.empty
-                  questions = Array.empty }
+            |> AsyncSeq.fold playQuestion initialGame
 
         do!
             connection
