@@ -1,12 +1,12 @@
 source https://api.nuget.org/v3/index.json
-source: https://nuget.pkg.github.com/aaronpowell/index.json username: "%GITHUB_FEED_USER%" password: "%GITHUB_FEED_PASS%"
+# source: https://nuget.pkg.github.com/aaronpowell/index.json username: "%GITHUB_FEED_USER%" password: "%GITHUB_FEED_PASS%"
 
 storage: none
 framework: net5.0, netstandard2.0, netstandard2.1
-nuget FSharp.CosmosDb 0.5.0-ci-724701173 ci
+nuget FSharp.CosmosDb
 nuget Microsoft.Extensions.Configuration.Json
 
 group Analyzers
     source https://api.nuget.org/v3/index.json
-    source: https://nuget.pkg.github.com/aaronpowell/index.json username: "%GITHUB_FEED_USER%" password: "%GITHUB_FEED_PASS%"
-nuget FSharp.CosmosDb.Analyzer 0.5.0-ci-726032018 ci
+    # source: https://nuget.pkg.github.com/aaronpowell/index.json username: "%GITHUB_FEED_USER%" password: "%GITHUB_FEED_PASS%"
+nuget FSharp.CosmosDb.Analyzer

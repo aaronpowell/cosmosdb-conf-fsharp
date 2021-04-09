@@ -45,7 +45,7 @@ let getConnection connStr =
 
 let getQuestions connection =
     connection
-    |> Cosmos.query "SELECT TOP 10 * FROM c WHERE c.modelType = 'Question'"
+    |> Cosmos.query<Question> "SELECT TOP 10 * FROM c WHERE c.modelType = 'Question'"
 
 let initialGame =
     { id = Guid.NewGuid().ToString()
@@ -115,7 +115,7 @@ let main argv =
 
         let! game =
             getQuestions connection
-            |> Cosmos.execAsync<Question>
+            |> Cosmos.execAsync
             |> AsyncSeq.fold playQuestion initialGame
 
         do!
